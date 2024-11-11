@@ -1,3 +1,7 @@
+# Live Demo
+[Visit this website](https://actionhub-production.up.railway.app/)
+
+
 # ActionHub
 ActionHub is an industrial-grade task management app, designed to streamline operations and enhance productivity across teams. With a robust backend built in Go and a responsive frontend in React, ActionHub provides a seamless experience for managing tasks, monitoring workflows, and improving collaboration.
 
@@ -12,9 +16,9 @@ ActionHub is an industrial-grade task management app, designed to streamline ope
 # Tech Stack
 - Backend: Go (Golang) - REST API
 - Frontend: React with Hooks, Context API
-- Database: PostgreSQL (or other supported databases)
+- Database:MONGODB (or other supported databases)
 - Authentication: JWT (JSON Web Tokens)
-- Hosting: Backend on Azure VM, Frontend on Vercel
+- Hosting: Backend on Azure VM, Frontend on Vercel or Railway
 # Getting Started
 Prerequisites
 Go 1.20+
