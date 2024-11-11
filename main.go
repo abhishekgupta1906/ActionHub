@@ -27,13 +27,12 @@ var collection *mongo.Collection
 func main() {
 	fmt.Println("Server,Running")
 	if(os.Getenv("ENV")!="production"){
-		// caanot load env file in prod
+		// cannot load env file in production environment
 		err := godotenv.Load(".env")
 		if err != nil {
 			log.Fatal("Error loading .env file")
 		}
 	}
-
 	MONGODB_URL := os.Getenv("MONGODB_URL")
 	//  connect to mongodb
 	clientoptions := options.Client().ApplyURI(MONGODB_URL)
