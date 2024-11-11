@@ -5,8 +5,10 @@ import (
 	"fmt"
 	"log"
 	"os"
+	
 
 	"github.com/gofiber/fiber/v2"
+	// "github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/joho/godotenv"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -15,19 +17,21 @@ import (
 )
 
 type Action struct {
-	ID        primitive.ObjectID     `json:"id"`
-	Completed bool   `json:"completed"`
-	Body      string `json:"body"`
+	ID        primitive.ObjectID `json:"_id,omitempty" bson:"_id,omitempty"`
+	Completed bool               `json:"completed"`
+	Body      string             `json:"body"`
 }
-
 
 var collection *mongo.Collection
 
 func main() {
 	fmt.Println("Server,Running")
-	err := godotenv.Load(".env")
-	if err != nil {
-		log.Fatal("Error loading .env file")
+	if(os.Getenv("ENV")!="production"){
+		// caanot load env file in prod
+		err := godotenv.Load(".env")
+		if err != nil {
+			log.Fatal("Error loading .env file")
+		}
 	}
 
 	MONGODB_URL := os.Getenv("MONGODB_URL")
@@ -38,16 +42,31 @@ func main() {
 		log.Fatal(err)
 	}
 	defer client.Disconnect(context.Background())
+	
 	err = client.Ping(context.Background(), nil)
 	fmt.Println("Connected to MongoDB")
 	collection = client.Database("actionhub").Collection("actions")
 
 	app := fiber.New()
-	app.Get("/api/actions",getActions)
-	app.Post("/api/actions",createAction)
-	app.Patch("/api/actions/:id",updateAction)
-	app.Delete("/api/actions/:id",deleteAction)
+	// app.Use(cors.New(cors.Config{
+	// 	AllowOrigins:     "http://localhost:5173",
+	// 	AllowMethods:     "GET,POST,PUT,DELETE,OPTIONS",
+	// 	AllowHeaders:     "Origin, Content-Type, Accept",
+       
+        
+	// }))
+
+	app.Get("/api/actions", getActions)
+	app.Post("/api/actions", createAction)
+	app.Patch("/api/actions/:id", updateAction)
+	app.Delete("/api/actions/:id", deleteAction)
 	port := os.Getenv("PORT")
+	if port == "" {
+		port="3000"
+	}
+	if(os.Getenv("ENV")=="production"){
+		app.Static("/", "./client/dist")
+	}
 	log.Fatal(app.Listen("0.0.0.0:" + port))
 }
 
@@ -72,19 +91,19 @@ func getActions(c *fiber.Ctx) error {
 	return c.JSON(actions)
 }
 func createAction(c *fiber.Ctx) error {
-	action:=new(Action)
-	if err:=c.BodyParser(action);err!=nil{
+	action := new(Action)
+	if err := c.BodyParser(action); err != nil {
 		return err
 	}
-	if(action.Body==""){
-		c.Status(400).JSON(fiber.Map{"error":"Body cannot be empty"})
+	if action.Body == "" {
+		c.Status(400).JSON(fiber.Map{"error": "Body cannot be empty"})
 		return nil
 	}
-	insertResult,err:=collection.InsertOne(context.Background(),action)
-	if err!=nil{
+	insertResult, err := collection.InsertOne(context.Background(), action)
+	if err != nil {
 
 	}
-	action.ID=insertResult.InsertedID.(primitive.ObjectID)
+	action.ID = insertResult.InsertedID.(primitive.ObjectID)
 	return c.Status(201).JSON(action)
 }
 
