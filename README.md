@@ -26,3 +26,32 @@ Node.js 18+
 PostgreSQL (or any supported database)
 Docker (for optional containerized setup)
 
+# Set Up your .env file
+```shell
+MONGODB_URL=<your mongo db url>
+PORT=5000
+ENV=development
+```
+
+# Command for Running
+```shell
+# Install dependencies for backend
+go mod tidy
+
+# Run backend server
+go run main.go
+
+# Install dependencies for frontend
+cd client 
+
+npm install
+
+# Run frontend server
+npm start
+```
+
+# Using Docker (Recommended)
+```shell
+docker compose up
+```
+

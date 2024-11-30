@@ -1,0 +1,44 @@
+# Go modules and build artifacts
+
+*.exe
+*.out
+*.log
+*.test
+*.prof
+*.profraw
+
+
+# Compiled binaries
+/server  # Replace with your binary name if different
+
+# Temporary or cache files
+*.tmp
+*.swp
+*.swo
+*.bak
+*.old
+
+# Test and benchmarking results
+test-results/
+bench-results/
+
+# Version control
+.git
+.gitignore
+
+# Editor and IDE files
+.vscode/
+.idea/
+*.iml
+
+# Operating System files
+.DS_Store
+Thumbs.db
+
+# Docker-related files
+docker-compose.override.yml
+
+
+# Frontend build or node_modules
+client/node_modules
+client/build
